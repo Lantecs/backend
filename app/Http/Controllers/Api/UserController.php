@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -61,10 +60,52 @@ class UserController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UserRequest $request, string $id)
     {
-        //
+        $user = User::findOrFail($id);
+
+        $validated = $request->validated();
+
+        $user->name = $validated['name'];
+
+        $user->save();
+
+        return $user;
     }
+
+    /**
+     * Update the email of specified resource in storage.
+     */
+    public function email(UserRequest $request, string $id)
+    {
+        $user = User::findOrFail($id);
+
+        $validated = $request->validated();
+
+        $user->email = $validated['email'];
+
+        $user->save();
+
+        return $user;
+    }
+
+    /**
+     * Update the password of specified resource in storage.
+     */
+    public function password(UserRequest $request, string $id)
+    {
+        $user = User::findOrFail($id);
+
+        $validated = $request->validated();
+
+        $user->password = Hash::make($validated['password']);
+
+        $user->save();
+
+        return $user;
+    }
+
+
 
     /**
      * Remove the specified resource from storage.
@@ -72,12 +113,12 @@ class UserController extends Controller
     public function destroy(string $id)
     {
 
-            $user = User::findOrFail($id);
-            $user->delete();
+        $user = User::findOrFail($id);
+        $user->delete();
 
-            return $user;
+        return $user;
 
 
 
-}
+    }
 }
