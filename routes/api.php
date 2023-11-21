@@ -1,12 +1,13 @@
 <?php
 
-use App\Http\Controllers\Api\AuthController;
-use App\Http\Controllers\Api\CarouselItemsController;
-use App\Http\Controllers\Api\ProfileController;
-use App\Http\Controllers\Api\UserController;
-use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\AiController;
+use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\PromptController;
+use App\Http\Controllers\Api\ProfileController;
+use App\Http\Controllers\Api\MessageController;
+use App\Http\Controllers\Api\CarouselItemsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,24 @@ use Illuminate\Support\Facades\Route;
 //Public APIS
 Route::post('/login', [AuthController::class, 'login'])->name('user.login');
 Route::post('/user', [UserController::class, 'store'])->name('user.store');
+
+// Chat APIs
+Route::controller(PromptController::class)->group(function () {
+    Route::get('/prompts', 'index');
+    Route::post('/prompts', 'store');
+});
+
+// Message APIs
+Route::controller(MessageController::class)->group(function () {
+    Route::get('/message', 'index');
+    Route::get('/message/{id}', 'show');
+    Route::post('/message', 'store');
+    Route::put('/message/{id}', 'update');
+    Route::delete('/message/{id}', 'destroy');
+});
+
+// User Selection
+Route::get('/user/selection', [UserController::class, 'selection']);
 
 //Private APIS
 Route::middleware(['auth:sanctum'])->group(function () {
