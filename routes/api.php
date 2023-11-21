@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\CarouselItemsController;
+use App\Http\Controllers\Api\ProfileController;
 use App\Http\Controllers\Api\UserController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -18,14 +19,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
+//Public APIS
 Route::post('/login', [AuthController::class, 'login'])->name('user.login');
 Route::post('/user', [UserController::class, 'store'])->name('user.store');
 
+//Private APIS
 Route::middleware(['auth:sanctum'])->group(function () {
 
     Route::post('/logout', [AuthController::class, 'logout']);
 
+    //Admin APIS
     Route::controller(CarouselItemsController::class)->group(function () {
         Route::get('/carousel', 'index');
         Route::get('/carousel/{id}', 'show');
@@ -43,7 +46,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/user/image/{id}', 'image')->name('user.image');
         Route::delete('/user/{id}', 'destroy');
     });
-    
+
+    //User specific APIS
+    Route::get('/profile/show', [ProfileController::class, 'show'])->name('profile.show');
+    Route::put('/profile/image', [ProfileController::class, 'image'])->name('profile.image');
 });
 
 
