@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\UserRequest;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 
 class UserController extends Controller
@@ -108,17 +109,23 @@ class UserController extends Controller
 
 
     /**
-     * Remove the specified resource from storage.
+     * Update image in the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function image(UserRequest $request, string $id)
     {
 
         $user = User::findOrFail($id);
-        $user->delete();
+
+        if (!is_null($user->image)) {
+            Storage::disk('public')->delete($user->image);
+        }
+
+        $user->image = $request->file('image')->storePublicly('images', 'public');
+
+
+        $user->save();
 
         return $user;
-
-
 
     }
 }

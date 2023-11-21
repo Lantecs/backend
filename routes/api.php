@@ -40,9 +40,10 @@ Route::middleware(['auth:sanctum'])->group(function () {
         Route::put('/user/{id}', 'update')->name('user.update.name');
         Route::put('/user/email/{id}', 'email')->name('user.update.email');
         Route::put('/user/password/{id}', 'password')->name('user.update.password');
+        Route::put('/user/image/{id}', 'image')->name('user.image');
         Route::delete('/user/{id}', 'destroy');
     });
-
+    
 });
 
 
